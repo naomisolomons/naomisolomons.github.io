@@ -364,38 +364,6 @@ function Node(x,y,id) {																													//Node object class.
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-function drawArrowhead(context, from, to, radius) {															// calling this function draws an arrowhead
-	var x_center = to.x;
-	var y_center = to.y;
-
-	var angle;
-	var x;
-	var y;
-
-	context.beginPath();
-
-	angle = Math.atan2(to.y - from.y, to.x - from.x)
-	x = radius * Math.cos(angle) + x_center;
-	y = radius * Math.sin(angle) + y_center;
-
-	context.moveTo(x, y);
-
-	angle += (1.0/3.0) * (2 * Math.PI)
-	x = radius * Math.cos(angle) + x_center;
-	y = radius * Math.sin(angle) + y_center;
-
-	context.lineTo(x, y);
-
-	angle += (1.0/3.0) * (2 * Math.PI)
-	x = radius *Math.cos(angle) + x_center;
-	y = radius *Math.sin(angle) + y_center;
-
-	context.lineTo(x, y);
-
-	context.closePath();
-
-	context.fill();
-}
 function _getQBezierValue(t, p1, p2, p3) {
     var iT = 1 - t;
     return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
@@ -407,7 +375,12 @@ function getQuadraticCurvePoint(startX, startY, cpX, cpY, endX, endY, position) 
         y:  _getQBezierValue(position, startY, cpY, endY)
     };
 }
-
+function getQuadraticAngle(t, sx, sy, cp1x, cp1y, ex, ey) {
+  var dx = 2*(1-t)*(cp1x-sx) + 2*t*(ex-cp1x);
+  var dy = 2*(1-t)*(cp1y-sy) + 2*t*(ey-cp1y);
+  return -Math.atan2(dx, dy) + 0.5*Math.PI;
+}
+///////////////////////////////////////////////////////////////////////////////
 function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object Class
 	this.from = from;																															//Defines a bunch of edge properties
 	this.to= to;
@@ -426,7 +399,10 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 		this.scl = 0.1 																															//controls the curviness of the edges
 		this.c_x = this.x_m + this.scl*(this.y_2-this.y_1)
 		this.c_y = this.y_m - this.scl*(this.x_2-this.x_1)
+
 		this.half = getQuadraticCurvePoint(this.x_1,this.y_1,this.c_x,this.c_y,this.x_2,this.y_2,0.5)
+		this.arrowpos = getQuadraticCurvePoint(this.x_1,this.y_1,this.c_x,this.c_y,this.x_2,this.y_2,0.5)
+		this.angle = getQuadraticAngle(0.5,this.x_1,this.y_1,this.c_x,this.c_y,this.x_2,this.y_2)
 
 		this.edge_colour = 'black'
 		this.k = 80 																																//controls the positioning of the self loops text
@@ -491,19 +467,17 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 			c.lineWidth = 2;
 	   	c.stroke();
 
-			var m = (this.y_2 - this.c_y)/(this.x_2 - this.c_x)												//Determines the positioning of the arrowheads
-			if(this.c_x < this.x_2){
-				var x_i = this.x_2 - 32/(Math.sqrt(1+m**2))
-				var y_i = this.y_2 - (32*m)/(Math.sqrt(1+m**2))
-			} else if(this.c_x > this.x_2){
-				var x_i = this.x_2 + 32/(Math.sqrt(1+m**2))
-				var y_i = this.y_2 + (32*m)/(Math.sqrt(1+m**2)) 												//40 indicates the positioning of the arrowheads
-			}
-
-
-			var from = {x:this.c_x, y:this.c_y}
-			var to = {x:x_i, y:y_i}
-			drawArrowhead(c,from,to,10); 																							//15 represents the "radius" of the arrowheads
+			c.save();
+			c.beginPath();
+			c.translate(this.arrowpos.x, this.arrowpos.y);
+			c.rotate(this.angle);
+			c.moveTo(-10, -10);
+			c.lineTo(10, 0);
+			c.lineTo(-10, 10);
+			c.lineTo(-10, -10);
+			c.fillStyle = "black";
+			c.fill();
+			c.restore();
 
 	   	c.beginPath();
 	   	c.strokeStyle = this.edge_colour;
