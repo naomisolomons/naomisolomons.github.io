@@ -396,6 +396,18 @@ function drawArrowhead(context, from, to, radius) {															// calling thi
 
 	context.fill();
 }
+function _getQBezierValue(t, p1, p2, p3) {
+    var iT = 1 - t;
+    return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
+}
+
+function getQuadraticCurvePoint(startX, startY, cpX, cpY, endX, endY, position) {
+    return {
+        x:  _getQBezierValue(position, startX, cpX, endX),
+        y:  _getQBezierValue(position, startY, cpY, endY)
+    };
+}
+
 function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object Class
 	this.from = from;																															//Defines a bunch of edge properties
 	this.to= to;
@@ -414,9 +426,10 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 		this.scl = 0.1 																															//controls the curviness of the edges
 		this.c_x = this.x_m + this.scl*(this.y_2-this.y_1)
 		this.c_y = this.y_m - this.scl*(this.x_2-this.x_1)
+		this.half = getQuadraticCurvePoint(this.x_1,this.y_1,this.c_x,this.c_y,this.x_2,this.y_2,0.5)
 
 		this.edge_colour = 'black'
-		this.k = 100 																																//controls the positioning of the self loops text
+		this.k = 80 																																//controls the positioning of the self loops text
 		this.r = 35 																																//radius of the self loops
 		c.font = "25px Arial";
 		c.fillStyle = "black";
@@ -440,7 +453,11 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 				this.x_text = this.x_1 + (this.k)/(Math.sqrt(1+(this.m)**2))
 				this.y_text = this.y_1 + (this.k*this.m)/(Math.sqrt(1+(this.m)**2))
 				if (this.weight != 0){
+					c.textAlign = "left";
 					c.fillText(this.weight,this.x_text,this.y_text);
+					c.moveTo(this.x_text,this.y_text)
+					c.lineTo(this.x_1 + (65)/(Math.sqrt(1+(this.m)**2)), this.y_1 + (65*this.m)/(Math.sqrt(1+(this.m)**2)))
+					c.stroke();
 				}
 
 			}else if ((this.x_1 - (canvas.width/2)) < 0 ){
@@ -454,7 +471,11 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 				this.x_text = this.x_1 - (this.k)/(Math.sqrt(1+(this.m)**2))
 				this.y_text = this.y_1 - (this.k*this.m)/(Math.sqrt(1+(this.m)**2))
 				if (this.weight != 0){
+					c.textAlign = "right";
 					c.fillText(this.weight,this.x_text,this.y_text);
+					c.moveTo(this.x_text,this.y_text)
+					c.lineTo(this.x_1 - (65)/(Math.sqrt(1+(this.m)**2)), this.y_1 - (65*this.m)/(Math.sqrt(1+(this.m)**2)))
+					c.stroke();
 				}
 			}
 
@@ -489,7 +510,8 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 	   	c.stroke();
 	   	c.font = "25px Arial";
 			c.fillStyle = "black";
-			c.textBaseline = "middle";																								//Changes how the text is aligned depending on its position on the page
+			c.textBaseline = "middle";
+																											//Changes how the text is aligned depending on its position on the page
 			if (this.weight != 0){
 				if (this.c_x > this.x_2 && this.c_y < this.y_2 || this.c_x < this.x_2 && this.c_y < this.y_2){
 					c.textAlign = "left";
@@ -498,6 +520,9 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 				}
 
 		   	c.fillText(this.weight, this.c_x,this.c_y);
+				c.moveTo(this.c_x,this.c_y)
+				c.lineTo(this.half.x, this.half.y)
+				c.stroke();
 			}
 
 		}
