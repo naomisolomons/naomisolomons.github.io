@@ -85,7 +85,39 @@ window.addEventListener('mouseup',																							//When a mouse up event
 		}
 );
 
+window.addEventListener('touchstart', 																						//listens for a mouse down event. when detected activated the handeling of dragging events.
+		function(event){
+			x_new = event.x;
+		  y_new = event.y;
+			isDragging = true;
+		}
+);
 
+window.addEventListener('touchmove',
+		function(event){
+			if(isDragging === true && isDraggedId !== null){ 													// the code is exicuted the the mouse is held down on a node
+				x_new = event.x;
+				y_new = event.y;
+				nodeArray[isDraggedId].updatePos(x_new, y_new) 													//this updates the position of the node to the current cursor position
+				for (var i = 0; i < edgeArray.length; i++){															// sums over all the edges and decides weather to update them or not.
+					if (edgeArray[i].from === isDraggedId){ 															// if the edge begins at the dragged node update its stating position
+						edgeArray[i].updateEdgeStart(x_new,y_new)
+					}if (edgeArray[i].to === isDraggedId){ 																// if the edge ends and the dragged node update the end position.
+						edgeArray[i].updateEdgeEnd(x_new,y_new) 														// double if statement is used as this catchs the case of self loops
+					}
+				}
+			}
+		}
+);
+
+window.addEventListener('touchend',																							//When a mouse up event occurs the relevant variables are reset.
+		function(event){
+			x_new = 0;
+			y_new = 0;
+			isDragging = false;
+			isDraggedId = null;
+		}
+);
 ////////////////////////////////////////////////////////////////////////////////
 function getRndInteger(min, max) {																							//Random integer generator used in the scramble function
   return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -336,12 +368,12 @@ function Node(x,y,id) {																													//Node object class.
 	this.update = function(){																											//This function handels the updating of the nodes.
 	var dist = Math.sqrt((this.x - mouse.x)**2+(this.y - mouse.y)**2)
 
-	if (dist < this.radius && this.colour == 'black' && mouse.shift === true){ 		//If the mouse clicks on a node while the shift key is held the node is selected.
+	if (dist < this.radius && this.colour == 'black'){ 		//If the mouse clicks on a node while the shift key is held the node is selected.
 		this.colour = 'red'																													//Change the colour to red
 		SelectMusic.play()
 		clearm()
 		selectedarr.push(this.id)																										//add the node the the selected array
-	} else if (dist < this.radius && this.colour == 'red' && mouse.shift === true){ // If the mouse clicks on the node + shift key then deselect the node
+	} else if (dist < this.radius && this.colour == 'red'){ // If the mouse clicks on the node + shift key then deselect the node
 		this.colour = 'black'
 		DeselectMusic.play()
 		clearm()
@@ -454,11 +486,6 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 					c.stroke();
 				}
 			}
-
-
-
-
-
 		}else{																																			//If not a self loop do this
 			c.beginPath();
 	   	c.moveTo(this.x_1,this.y_1);
