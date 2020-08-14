@@ -107,6 +107,6 @@ if __name__== '__main__': #Test Code
         
     html = html1+html2+html3
     #This writes the generated HTML version of the graph to a html file which can be viewed in browser
-    f = open(r"C:\Users\User\Documents\Cohort_Project\qflow\Qflow_Level_Rand.html", "w")
+    f = open(r"Qflow_Level_Rand.html", "w")
     f.write(html)
     f.close()
