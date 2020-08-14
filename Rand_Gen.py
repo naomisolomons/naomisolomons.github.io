@@ -78,7 +78,7 @@ if __name__== '__main__': #Test Code
             <html lang = "en">
             <head>
                 <meta charset="utf-8">
-                <title>Qflow - A Quantum Game</title>
+                <title>Squamble - A Quantum Game</title>
                 <style type="text/css">
                     canvas {
                         border: 1px solid black;
