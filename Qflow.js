@@ -450,13 +450,18 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 
 				this.x_s = this.x_1 - (this.d)/(Math.sqrt(1+(this.m)**2))
 				this.y_s = this.y_1 - (this.d*this.m)/(Math.sqrt(1+(this.m)**2))
+				c.strokeStyle = this.edge_colour;
 				c.arc(this.x_s,this.y_s,this.r,0,Math.PI * 2, false);
-		   	c.strokeStyle = this.edge_colour;
 				c.lineWidth = 2;
 		   	c.stroke();
 				this.x_text = this.x_1 - (this.k)/(Math.sqrt(1+(this.m)**2))
 				this.y_text = this.y_1 - (this.k*this.m)/(Math.sqrt(1+(this.m)**2))
 				if (this.weight != 0){
+					if (this.weight < 0){
+						c.fillStyle = "red";
+					}else{
+						c.fillStyle = "black";
+					}
 					c.textAlign = "right";
 					c.fillText(this.weight,this.x_text,this.y_text);
 					c.moveTo(this.x_text,this.y_text)
@@ -472,6 +477,31 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 			c.lineWidth = 2;
 	   	c.stroke();
 
+	   	c.beginPath();
+	   	c.strokeStyle = this.edge_colour;
+	   	c.stroke();
+	   	c.font = "25px Arial";
+			if (this.weight < 0){
+				c.fillStyle = "red";
+			}else{
+				c.fillStyle = "black";
+			}
+
+			c.textBaseline = "middle";
+																											//Changes how the text is aligned depending on its position on the page
+			if (this.weight != 0){
+				if (this.c_x > this.x_2 && this.c_y < this.y_2 || this.c_x < this.x_2 && this.c_y < this.y_2){
+					c.textAlign = "left";
+				} else if (this.c_x < this.x_2 && this.c_y > this.y_2 || this.c_x > this.x_2 && this.c_y > this.y_2){
+					c.textAlign = "right";
+				}
+
+		   	c.fillText(this.weight, this.c_x,this.c_y);
+				c.strokeStyle = "black"
+				c.moveTo(this.c_x,this.c_y)
+				c.lineTo(this.half.x, this.half.y)
+				c.stroke();
+			}
 			c.save();
 			c.beginPath();
 			c.translate(this.arrowpos.x, this.arrowpos.y);
@@ -483,26 +513,6 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 			c.fillStyle = "black";
 			c.fill();
 			c.restore();
-
-	   	c.beginPath();
-	   	c.strokeStyle = this.edge_colour;
-	   	c.stroke();
-	   	c.font = "25px Arial";
-			c.fillStyle = "black";
-			c.textBaseline = "middle";
-																											//Changes how the text is aligned depending on its position on the page
-			if (this.weight != 0){
-				if (this.c_x > this.x_2 && this.c_y < this.y_2 || this.c_x < this.x_2 && this.c_y < this.y_2){
-					c.textAlign = "left";
-				} else if (this.c_x < this.x_2 && this.c_y > this.y_2 || this.c_x > this.x_2 && this.c_y > this.y_2){
-					c.textAlign = "right";
-				}
-
-		   	c.fillText(this.weight, this.c_x,this.c_y);
-				c.moveTo(this.c_x,this.c_y)
-				c.lineTo(this.half.x, this.half.y)
-				c.stroke();
-			}
 
 		}
 
