@@ -23,3 +23,7 @@ The game can be played either by running 'Stage_Selector_Interface.py' or the ht
 ## Deployment 
 
 We are hoping to release the game as an executable.
+
+## Contributions
+
+The code for this was written by Sam Mister and Naomi Solomons - please access the https://github.com/naomisolomons/qflow repository for a more accurate idea of author contributions.
