@@ -9,3 +9,11 @@ function mix (){
 
 }
 }
+
+function istutorial(){
+  return true
+}
+
+function LevelMessages(){
+  return ['Once again, start the level by clicking "squamble". Watching the animation will give you a clue how to play.', 'You have more choices of potential cycles this time.',' Shift + click the nodes you think were involved in this level, then play as before.']
+}

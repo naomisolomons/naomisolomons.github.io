@@ -16,3 +16,6 @@ function mix (){
   }
 
 }
+function istutorial(){
+  return false
+}

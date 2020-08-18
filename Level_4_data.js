@@ -50,3 +50,7 @@ setTimeout(function(){
 };
 }, 3000);
 }
+
+function istutorial(){
+  return false
+}

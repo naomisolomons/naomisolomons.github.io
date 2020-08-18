@@ -90,9 +90,6 @@ window.addEventListener('mouseup',																							//When a mouse up event
 function getRndInteger(min, max) {																							//Random integer generator used in the scramble function
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
-function Mix(){																																	// calls the mix function for each levels data file.
-	mix();
-}
 
 function Scramble(){																														// This function performs random mixing operations on the graph.
 for (var i =0; i<500; i++){																											//This function could be with some reworking as I feel like it in inefficent and buggy
@@ -518,6 +515,52 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
+function MessageBox (){
+	this.messages = LevelMessages()
+	this.MessageIndex = 0
+
+	this.draw = function(){
+		c.font = "25px Arial";
+		c.fillStyle = "black";
+		c.textBaseline = "middle";
+		c.fillText(this.messages[this.MessageIndex], 100,100);
+	}
+	this.update = function(){
+		this.draw()
+	}
+  this.Next = function(){
+		if (this.MessageIndex === this.messages.length-1){
+			this.MessageIndex = this.messages.length-1
+		}else {
+			this.MessageIndex = this.MessageIndex + 1
+		}
+
+	}
+
+	this.Back = function(){
+		if (this.MessageIndex === 0){
+			this.MessageIndex === 0
+		}else {
+			this.MessageIndex = this.MessageIndex - 1
+		}
+
+	}
+}
+
+
+var tutorial = istutorial()
+if (tutorial === true){
+	messgbox = new MessageBox()
+	function next(){
+		messgbox.Next()
+	}
+	function back(){
+		messgbox.Back()
+	}
+	var NextButton = new button(1200,150,125, 40,"Next",next)
+	var BackButton = new button(25,150,125, 40,"Back",back)
+}
+///////////////////////////////////////////////////////////////////////////////
 var nodeArray = [];																															//Initiallised an array of node objects
 for (var i = 0; i < JSON_OBj["nodes"].length; i++){
 	var id = JSON_OBj["nodes"][i]["id"]
@@ -559,7 +602,7 @@ VictoryMusic = new sound("Win_v1.wav",false,1)
 var selectbutton = new button((canvas.width)/8, 0.75*(canvas.height), 125, 40, "CHECK", interaction)
 var endbutton = new button((canvas.width)/8, (0.75*(canvas.height)+45), 125, 40, "SUBMIT", endinteraction)
 var resetbutton = new button((canvas.width)/8, (0.75*(canvas.height)+90), 125, 40, "RESET", reset)
-var scramblebutton = new button(6*(canvas.width)/8, (0.75*(canvas.height)+45), 180, 40, "SQUAMBLE", Mix)
+var scramblebutton = new button(6*(canvas.width)/8, (0.75*(canvas.height)+45), 180, 40, "SQUAMBLE", mix)
 var musicbutton = new button(6*(canvas.width)/8, (0.75*(canvas.height)), 125, 40, "MUSIC", PlayMusic)
 ///////////////////////////////////////////////////////////////////////////////
 function refresh() {																														//This refresh function controls the animation loop.
@@ -578,6 +621,12 @@ function refresh() {																														//This refresh function contro
 	resetbutton.update()
 	scramblebutton.update()
 	musicbutton.update()
+	if (tutorial === true){
+		messgbox.update()
+		NextButton.update()
+		BackButton.update()
+	}
+
 }
 
 refresh();

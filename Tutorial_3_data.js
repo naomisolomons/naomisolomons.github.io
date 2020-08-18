@@ -23,3 +23,11 @@ function mix (){
 }, 5000);
 
 }
+
+function istutorial(){
+  return true
+}
+
+function LevelMessages(){
+  return ["Squamble!", "As you may have noticed from the squanimation, there are two different cycles in this level.","Try adjusting the first cycle, then press submit.", "The level isn't finished as there are still negative values. Now you can shift + click to select a new cycle."]
+}

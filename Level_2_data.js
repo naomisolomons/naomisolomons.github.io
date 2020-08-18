@@ -25,3 +25,6 @@ function mix (){
 }, 5000);
 
 }
+function istutorial(){
+  return false
+}

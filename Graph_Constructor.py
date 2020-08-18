@@ -20,7 +20,7 @@ class Graph_Wrapper:
         self.values = nx.circular_layout(self.graph,220) #This defines an array of x,y coridinates that will give the graph a circualr structure when drawn
         
         for source, target in self.graph.edges: # assigns the weight of each edge the corresponding value of the flow matrix
-            self.graph[source][target]['weight'] = self.prob_flows[source,target]       
+            self.graph[source][target]['weight'] = self.prob_flows[target,source]       
         
         for nodes in self.graph.nodes: #Assigns each node a x position and y position 
             self.graph.nodes[nodes]['x_pos'] = self.values[nodes][0]
@@ -106,14 +106,15 @@ if __name__== '__main__': #Test Code
     html2=        """<div class = "div1" data-graph = "{}"></div>""".format(graph_data)
                 
     html3=        """<canvas></canvas>
-                <script src="Qflow.js"></script>
                 <script src="Qflow_Level_Test_data.js"></script>
+                <script src="Qflow.js"></script>
+                
             </body>
             </html>"""
         
     html = html1+html2+html3
     #This writes the generated HTML version of the graph to a html file which can be viewed in browser
-    f = open(r"C:\Users\User\Documents\Cohort_Project\qflow\Qflow_Level_Test.html", "w")
+    f = open(r"Qflow_Level_Test.html", "w")
     f.write(html)
     f.close()
 

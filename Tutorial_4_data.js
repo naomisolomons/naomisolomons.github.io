@@ -13,3 +13,10 @@ function mix (){
   }
 
 }
+function istutorial(){
+  return true
+}
+
+function LevelMessages(){
+  return ["This is the last tutorial level. You know what to do!","Here's a clue: you will need to choose a cycle with 3 nodes.", "In some future levels, there's more than one way of solving it."," When you've solved it one way, why not press reset and try to find the other?", "Good luck and happy squambling!"]
+}

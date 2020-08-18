@@ -100,8 +100,8 @@ if __name__== '__main__': #Test Code
     html2=        """<div class = "div1" data-graph = "{}"></div>""".format(graph_data)
                 
     html3=        """<canvas></canvas>
-                <script src="Qflow.js"></script>
                 <script src="Qflow_Level_Rand_data.js"></script>
+                <script src="Qflow.js"></script>
             </body>
             </html>"""
         

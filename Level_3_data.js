@@ -96,3 +96,7 @@ setTimeout(function(){
 }, 24000);
 
 }
+
+function istutorial(){
+  return false
+}
