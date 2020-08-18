@@ -7,6 +7,8 @@ var counter_included = []
 var cycle_edges = {}
 var counter_cycle_edges = {}
 var selectedarr = [];
+var current_x = 0
+var current_y = 0
 
 //Loading of the background image
 var img = new Image();
@@ -72,6 +74,9 @@ window.addEventListener('mousemove',
 						edgeArray[i].updateEdgeEnd(x_new,y_new) 														// double if statement is used as this catchs the case of self loops
 					}
 				}
+			}else{
+				current_x = event.x
+				current_y = event.y
 			}
 		}
 );
@@ -282,11 +287,14 @@ function button(x,y,w,h,buttontext,func) {																			//Generic object th
 	this.width = w;
 	this.height = h;
   this.text = buttontext;
+	this.fillcolour = "white"
 
 	this.draw = function(){																												//This function determines how the button is drawn.
 		c.beginPath();
 		c.strokeStyle = "black";
 		c.lineWidth = 2;
+		c.fillStyle = this.fillcolour;
+		c.fillRect(this.x,this.y,this.width,this.height);
 		c.rect(this.x,this.y,this.width,this.height);
 		c.fillStyle = "black";
 		c.textAlign = "start";
@@ -298,6 +306,11 @@ function button(x,y,w,h,buttontext,func) {																			//Generic object th
 		if (mouse.x < (this.x + this.width) && mouse.x > this.x && mouse.y < (this.y + this.height) && mouse.y > this.y){
 			func();
 			clearm();
+		}
+		if (current_x < (this.x + this.width) && current_x > this.x && current_y < (this.y + this.height) && current_y > this.y){
+			this.fillcolour = "grey"
+		}else{
+			this.fillcolour = "white"
 		}
 		this.draw();
 	}
@@ -557,8 +570,8 @@ if (tutorial === true){
 	function back(){
 		messgbox.Back()
 	}
-	var NextButton = new button(1200,150,125, 40,"Next",next)
-	var BackButton = new button(25,150,125, 40,"Back",back)
+	var NextButton = new button(7*(canvas.width)/8,150,90, 40,"NEXT",next)
+	var BackButton = new button((canvas.width)/8,150,80, 40,"BACK",back)
 }
 ///////////////////////////////////////////////////////////////////////////////
 var nodeArray = [];																															//Initiallised an array of node objects
