@@ -1,16 +1,18 @@
 # qflow
 
-This is the repository for the quantum game 'QFlow', submitted as part of the QE-CDT cohort project for Cohort 6. Further information about the game, including background Physics and how to play, can be found in the project report, or within the game itself.
+This is the repository for the quantum game 'Squamble' (originally called QFlow), submitted as part of the QE-CDT cohort project for Cohort 6. Further information about the game, including background Physics and how to play, can be found in the project report, or within the game itself.
 
 ## Repository contents
 
-'Stage_Selector_Interface.py' produces the user interface. This opens the appropriate level in a web browser. 
+The 'index.html' file directs the GitHub pages to the homepage, which is 'index_v2.html'. It is recommended that Microsoft Edge is not used to play Squamble. This file then opens the appropriate pages, either for information ('About.html' or 'How_to_play.html') or game levels.
 
-These levels are the html files 'Qflow_LevelX.html', which call the Javascript file 'Qflow.js'. This is the longest file and provides the functionality of the game.
+These levels are the html files 'Level_X.html', or 'Tutorial_X.html' which call the Javascript file 'Qflow.js', which provides the functionality of the game, and 'Level_X_data.js' which draws the appropriate starting graph.
 
-Note that 'Stage_Selector_Interface.py' contains almost all of the functionality of 'Stage_Selector.py'. These files will be merged later on in the project. These files import classes from the modules 'Qflow_Level_Builder.py' and 'Graph_Constructor.py'. These use qiskit to generate the circuits that provide the data used as a basis for to construct the levels.
+These files import classes from the module 'Graph_Constructor.py', which uses Qiskit to generate the circuits that provide the data used as a basis to construct the levels.
 
 Levels can also be generated using the file 'Rand_Gen.py', which creates circuits randomly.
+
+The repository also contains music (.wav) and images (.jpg) for the game.
 
 ## Prerequisites
 
