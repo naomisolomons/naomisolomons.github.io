@@ -19,6 +19,7 @@ var advinter = false
 var img = new Image();
 img.src = "Background_v3.jpg";
 
+let checker = arr => arr.every(Boolean);
 
 var c = canvas.getContext('2d');
 canvas.width = window.innerWidth; //sets the height and width of the canvas
@@ -35,8 +36,8 @@ function toggle(item){																														//Toggles the truth value of
 }
 
 window.addEventListener('keydown',function(event){															//If the advanced options keys are pressed activate the advanced button
-	var key = event.keyCode || e.which;
-	if(key == "65" && event.shiftKey == true){
+	var Pressedkey = event.keyCode || e.which;
+	if(Pressedkey == "65" && event.shiftKey == true){
 		advActive = toggle(advActive)
 		}
 	}
@@ -112,7 +113,7 @@ window.addEventListener('mouseup',																							//When a mouse up event
 function getRndInteger(min, max) {																							//Random integer generator used in the scramble function
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
-
+/*
 function Scramble(){																														// This function performs random mixing operations on the graph.
 for (var i =0; i<500; i++){																											//This function could be with some reworking as I feel like it in inefficent and buggy
 	var scram_arr = []																														// It is not currently being implimented as we are manually scrambling the levels
@@ -144,7 +145,7 @@ for (var i =0; i<500; i++){																											//This function could be w
 		counter_cycle_edges = {}
 		scram_arr = []
 	}
-
+*/
 //////////////////////////////////////////////////////////////////////////////// This function checks that a selected cycle is valid.
 function Cyclecheck(arr) {																											// This means that it checks that every node in the proposed cycle has an edge between them.
 	for (var i = 0; i < arr.length; i++){																					// It also checks that the reverse cycle exists in the graph
@@ -182,7 +183,7 @@ function Cyclecheck(arr) {																											// This means that it check
 			}
 		}
 	}
-	let checker = arr => arr.every(Boolean); 																			//returns true if every element in an array is true.
+	 																																							//returns true if every element in an array is true.
 
 	if (checker(included) == true && checker(counter_included) == true){					// if cycle and counter cycle are in the graph then return true.
 		return true
@@ -203,11 +204,12 @@ function advchecher(){																													//this function handles the a
   if (m == null || m == "") {
     reset();
   } else {
+		const N = JSON_OBj["nodes"].length
 		edge_ij = [selectedarr[0],selectedarr[1]]																		//define the edges in the two cycle
-		edge_ipnjpm = [(selectedarr[0]+n)%(JSON_OBj["nodes"].length),(selectedarr[1]+m)%(JSON_OBj["nodes"].length)]
+		edge_ipnjpm = [(selectedarr[0]+n)%(N),(selectedarr[1]+m)%(N)]
 
-		edge_ipnj = [(selectedarr[0]+n)%(JSON_OBj["nodes"].length),selectedarr[1]]
-		edge_ijpm = [selectedarr[0], (selectedarr[1]+m)%(JSON_OBj["nodes"].length)]
+		edge_ipnj = [(selectedarr[0]+n)%(N),selectedarr[1]]
+		edge_ijpm = [selectedarr[0], (selectedarr[1]+m)%(N)]
 
 		truth = [false,false,false,false]
 		truth = [edge_checker(edge_ij),edge_checker(edge_ipnjpm),edge_checker(edge_ipnj),edge_checker(edge_ijpm)] //check that the edges exist
@@ -217,7 +219,7 @@ function advchecher(){																													//this function handles the a
 		counter_advcyc[edge_ipnj] = edge_index(edge_ipnj)
 		counter_advcyc[edge_ijpm] = edge_index(edge_ijpm)
 
-		let checker = arr => arr.every(Boolean);																		//if all the edges are in the graph continue
+																																								//if all the edges are in the graph continue
 		if (checker(truth) === true){
 			for (var i = 0; i < selectedarr.length; i++){
 				nodeArray[selectedarr[i]].changecol("green");														//turn active nodes and edges green
@@ -245,28 +247,12 @@ function advchecher(){																													//this function handles the a
   	}
 	}
 }
-window.addEventListener('wheel', function(event) {															//deals with mouse wheel events
-		if (advinter === true){																											//if interactivity is enabled change the weights of the edges dependent on the direction of the scroll
-			for (var key in advcyc){
-				id = advcyc[key];
-				if (event.deltaY < 0){
-					edgeArray[id].changeweight(0.01)
-				}else if (event.deltaY > 0){
-					edgeArray[id].changeweight(-0.01)
-				}
-			}
-			for (var key in counter_advcyc){
-				id = counter_advcyc[key];
-				if (event.deltaY < 0){
-					edgeArray[id].changeweight(-0.01)
-				}else if (event.deltaY > 0){
-					edgeArray[id].changeweight(0.01)
-				}
-			}
-		}
+window.addEventListener('wheel', function(event) { cycleUpdater(advinter, advcyc, counter_advcyc, 0)});															//deals with mouse wheel events
+window.addEventListener('keydown',function(event){
+	var keyPressed = event.keyCode || event.which;
+	cycleUpdater(advinter, advcyc, counter_advcyc, keyPressed)
 	}
 )
-
 
 function edge_checker(edgecan){																									// checks if an edge is in the graph
 	for (var j = 0; j < JSON_OBj["edges"].length; j++){
@@ -290,9 +276,10 @@ function edge_checker(edgecan){																									// checks if an edge is 
 function interaction (){																												//turns the nodes green and activate interactive mode.
 	check = Cyclecheck(selectedarr)
 	if (check == true){
+		inter = true
 		for (var i = 0; i < selectedarr.length; i++){
 			nodeArray[selectedarr[i]].changecol("green");
-			inter = true}
+		}
 		for (var key in cycle_edges){
 			id = cycle_edges[key];
 			edgeArray[id].changecol("green")
@@ -307,29 +294,34 @@ function interaction (){																												//turns the nodes green and 
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-window.addEventListener('wheel', function(event) {															//deals with mouse wheel events
+window.addEventListener('wheel', function(event) {cycleUpdater(inter, cycle_edges, counter_cycle_edges, 0)});
+window.addEventListener('keydown',function(event){
+	var keyPressed = event.keyCode || event.which;
+	cycleUpdater(inter, cycle_edges, counter_cycle_edges, keyPressed)
+	}
+)																																								//deals with mouse wheel events
 
-	if (inter == true){																														//if interactivity is enabled change the weights of the edges dependent on the direction of the scroll
-		for (var key in cycle_edges){
-			id = cycle_edges[key];
-			if (event.deltaY < 0){
+function cycleUpdater(bool, arr1, arr2, keyPressed){
+	if (bool == true){																														//if interactivity is enabled change the weights of the edges dependent on the direction of the scroll
+		for (var key in arr1){
+			id = arr1[key];
+			if (event.deltaY < 0 || keyPressed == "38"){
 				edgeArray[id].changeweight(0.01)
-			}else if (event.deltaY > 0){
+			}else if (event.deltaY > 0 || keyPressed == "40"){
 				edgeArray[id].changeweight(-0.01)
 			}
 
 		}
-		for (var key in counter_cycle_edges){
-			id = counter_cycle_edges[key];
-			if (event.deltaY < 0){
+		for (var key in arr2){
+			id = arr2[key];
+			if (event.deltaY < 0 || keyPressed == "38"){
 				edgeArray[id].changeweight(-0.01)
-			}else if (event.deltaY > 0){
+			}else if (event.deltaY > 0 || keyPressed == "40"){
 				edgeArray[id].changeweight(0.01)
 			}
 		}
 	}
-	}
-)
+}
 ///////////////////////////////////////////////////////////////////////////////
 function endinteraction() {																											//when called this function checks the win condition and ends the interactivity.
 
@@ -362,7 +354,7 @@ function endinteraction() {																											//when called this functio
 			winarry.push(false)
 		}
 	}
-		let checker = arr => arr.every(Boolean);
+
 		if (checker(winarry) == true){
 			BackgroundMusic.stop()
 			MusicPlaying = false
@@ -370,8 +362,6 @@ function endinteraction() {																											//when called this functio
 			setTimeout(function(){
 				alert("Congrats on Completing the Level. Refresh the page to play again or return to the home page for another Level.")
 			}, 200);
-
-
 		}
 	inter = false;																																//reset all appropriate variables
 	selectedarr = [];
@@ -385,38 +375,12 @@ function endinteraction() {																											//when called this functio
 }
 ///////////////////////////////////////////////////////////////////////////////
 function reset(){																																//This function resents everything is you want to start from scratch.
-	for (var i = 0; i < edgeArray.length; i++){
-		edgeArray[i].resetweight()
-	}
-	for (var i = 0; i < selectedarr.length; i++){
-		nodeArray[selectedarr[i]].changecol("black");
-	}
-	for (var key in cycle_edges){
-		id = cycle_edges[key];
-		edgeArray[id].changecol("black")
-	}
-	for (var key in counter_cycle_edges){
-		id = counter_cycle_edges[key];
-		edgeArray[id].changecol("black")
-	}
-
-	for (var key in advcyc){
-		id = advcyc[key];
-		edgeArray[id].changecol("black")
-	}
-	for (var key in counter_advcyc){
-		id = counter_advcyc[key];
-		edgeArray[id].changecol("black")
-	}
-	inter = false;
-	selectedarr = [];
-	included = []
-	counter_included = []
-	cycle_edges = {}
-	counter_cycle_edges = {}
-	advcyc = {}
-	counter_advcyc = {}
-	advinter = false
+	endinteraction();
+	setTimeout(function(){
+		for (var i = 0; i < edgeArray.length; i++){
+			edgeArray[i].resetweight()
+		}
+	}, 100)
 }
 ///////////////////////////////////////////////////////////////////////////////
 function sound(src, loopValue,volume) {
@@ -712,7 +676,12 @@ function MessageBox (){
 		c.font = "25px Arial";
 		c.fillStyle = "black";
 		c.textBaseline = "middle";
-		c.fillText(this.messages[this.MessageIndex], 100,100);
+		c.fillText(this.messages[this.MessageIndex], 100,37.5);
+		c.beginPath();
+		c.strokeStyle = "black";
+		c.lineWidth = 2;
+		c.rect(50,0,(canvas.width-100),75);
+		c.stroke();
 	}
 	this.update = function(){
 		this.draw()
@@ -744,8 +713,8 @@ if (tutorial === true){
 	function back(){
 		messgbox.Back()
 	}
-	var NextButton = new button(7*(canvas.width)/8,150,90, 40,"NEXT",next)
-	var BackButton = new button((canvas.width)/8,150,80, 40,"BACK",back)
+	var NextButton = new button(canvas.width - 140,100,90, 40,"NEXT",next)
+	var BackButton = new button((50),100,80, 40,"BACK",back)
 }
 ///////////////////////////////////////////////////////////////////////////////
 var nodeArray = [];																															//Initiallised an array of node objects
