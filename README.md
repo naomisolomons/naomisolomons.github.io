@@ -10,21 +10,15 @@ These levels are the html files 'Level_X.html', or 'Tutorial_X.html' which call 
 
 These files import classes from the module 'Graph_Constructor.py', which uses Qiskit to generate the circuits that provide the data used as a basis to construct the levels.
 
-Levels can also be generated using the file 'Rand_Gen.py', which creates circuits randomly.
+Levels can also be generated using the file 'Rand_Gen.py', which creates circuits randomly (these are the files 'Qflow_Level_Rand.html', 'Qflow_Level_Rand_data.js').
 
 The repository also contains music (.wav) and images (.jpg) for the game.
 
-## Prerequisites
+## Prerequisites & Deployment
 
-To get a copy running on your local machine for development and testing purposes, it is necessary to first install qiskit. Instructions for doing so can be found here: https://qiskit.org/documentation/install.html. Note that it is best to do so using Anaconda.
+To get a copy running on your local machine for development and testing purposes, it is necessary to first install Qiskit. Instructions for doing so can be found here: https://qiskit.org/documentation/install.html. Note that it is best to do so using Anaconda.
 
-You will also need to change the path of some files in 'Stage_Selector_Interface.py'.
-
-The game can be played either by running 'Stage_Selector_Interface.py' or the html file associated to the chosen level.
-
-## Deployment 
-
-We are hoping to release the game as an executable.
+The game can be played at naomisolomons.github.io. 
 
 ## Contributions
 
