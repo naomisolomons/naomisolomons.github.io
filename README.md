@@ -1,4 +1,4 @@
-# qflow
+# Squamble
 
 This is the repository for the quantum game 'Squamble' (originally called QFlow), submitted as part of the QE-CDT cohort project for Cohort 6. Further information about the game, including background Physics and how to play, can be found in the project report, or within the game itself.
 
