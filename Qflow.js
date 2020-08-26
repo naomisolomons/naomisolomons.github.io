@@ -19,7 +19,7 @@ var advinter = false
 var img = new Image();
 img.src = "Background_v3.jpg";
 
-let checker = arr => arr.every(Boolean);
+let checker = arr => arr.every(Boolean);																				//useful function for checking if all elements of an array are true
 
 var c = canvas.getContext('2d');
 canvas.width = window.innerWidth; //sets the height and width of the canvas
@@ -110,10 +110,10 @@ window.addEventListener('mouseup',																							//When a mouse up event
 
 
 ////////////////////////////////////////////////////////////////////////////////
-function getRndInteger(min, max) {																							//Random integer generator used in the scramble function
+/*function getRndInteger(min, max) {																							//Random integer generator used in the scramble function
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
-/*
+
 function Scramble(){																														// This function performs random mixing operations on the graph.
 for (var i =0; i<500; i++){																											//This function could be with some reworking as I feel like it in inefficent and buggy
 	var scram_arr = []																														// It is not currently being implimented as we are manually scrambling the levels
@@ -146,6 +146,19 @@ for (var i =0; i<500; i++){																											//This function could be w
 		scram_arr = []
 	}
 */
+////////////////////////////////////////////////////////////////////////////////
+function edge_checker(edgecan){																									// checks if an edge is in the graph
+	for (var j = 0; j < JSON_OBj["edges"].length; j++){
+		var edge = [JSON_OBj["edges"][j]["from"], JSON_OBj["edges"][j]["to"]]
+		if (edge[0] == edgecan[0] && edge[1] == edgecan[1]){
+			bool_index = {
+				bool: true,
+				index:j
+			};
+			return bool_index
+			}
+		}
+	}
 //////////////////////////////////////////////////////////////////////////////// This function checks that a selected cycle is valid.
 function Cyclecheck(arr) {																											// This means that it checks that every node in the proposed cycle has an edge between them.
 	for (var i = 0; i < arr.length; i++){																					// It also checks that the reverse cycle exists in the graph
@@ -168,23 +181,14 @@ function Cyclecheck(arr) {																											// This means that it check
 				var counter_edgecan = [arr[i+1],arr[i]];
 			}
 		}
-		for (var j = 0; j < JSON_OBj["edges"].length; j++){													// sum over the edges and checks that the proposed edges are in the edge set
-			var edge = [JSON_OBj["edges"][j]["from"], JSON_OBj["edges"][j]["to"]]
-			if (edge[0] == edgecan[0] && edge[1] == edgecan[1]){
-				included[i] = true;
-				cycle_edges[edgecan] = j
-			}
-		}
-		for (var j = 0; j < JSON_OBj["edges"].length; j++){
-			var edge = [JSON_OBj["edges"][j]["from"], JSON_OBj["edges"][j]["to"]]
-			if (edge[0] == counter_edgecan[0] && edge[1] == counter_edgecan[1]){
-				counter_included[i] = true;
-				counter_cycle_edges[counter_edgecan] = j
-			}
-		}
+
+		included[i] = edge_checker(edgecan).bool;																		// sum over the edges and checks that the proposed edges are in the edge set
+		cycle_edges[edgecan] = edge_checker(edgecan).index;
+
+		counter_included[i] = edge_checker(counter_edgecan).bool;
+		counter_cycle_edges[edgecan] = edge_checker(counter_edgecan).index;
 	}
 	 																																							//returns true if every element in an array is true.
-
 	if (checker(included) == true && checker(counter_included) == true){					// if cycle and counter cycle are in the graph then return true.
 		return true
 	}else {
@@ -196,11 +200,11 @@ function advchecher(){																													//this function handles the a
 	if (selectedarr.length !== 2){
 		alert("Advanced Check only Accepts 2-Cycles")																// Only works for two cycles
 	}else{
-		n = parseInt(prompt("Please enter first index:"));													//parse user input for first integer
+		n = parseInt(prompt("Please enter first index(n):"));													//parse user input for first integer
   if (n == null || n == "") {
     reset();
   } else {
-    m =  parseInt(prompt("Please enter second index:"));												//parse user input for second integer
+    m =  parseInt(prompt("Please enter second index(m):"));												//parse user input for second integer
   if (m == null || m == "") {
     reset();
   } else {
@@ -212,12 +216,12 @@ function advchecher(){																													//this function handles the a
 		edge_ijpm = [selectedarr[0], (selectedarr[1]+m)%(N)]
 
 		truth = [false,false,false,false]
-		truth = [edge_checker(edge_ij),edge_checker(edge_ipnjpm),edge_checker(edge_ipnj),edge_checker(edge_ijpm)] //check that the edges exist
+		truth = [edge_checker(edge_ij).bool,edge_checker(edge_ipnjpm).bool,edge_checker(edge_ipnj).bool,edge_checker(edge_ijpm).bool] //check that the edges exist
 
-		advcyc[edge_ij] = edge_index(edge_ij)																				//determine edge index
-		advcyc[edge_ipnjpm] = edge_index(edge_ipnjpm)
-		counter_advcyc[edge_ipnj] = edge_index(edge_ipnj)
-		counter_advcyc[edge_ijpm] = edge_index(edge_ijpm)
+		advcyc[edge_ij] = edge_checker(edge_ij).index																				//determine edge index
+		advcyc[edge_ipnjpm] = edge_checker(edge_ipnjpm).index
+		counter_advcyc[edge_ipnj] = edge_checker(edge_ipnj).index
+		counter_advcyc[edge_ijpm] = edge_checker(edge_ijpm).index
 
 																																								//if all the edges are in the graph continue
 		if (checker(truth) === true){
@@ -248,28 +252,11 @@ function advchecher(){																													//this function handles the a
 	}
 }
 window.addEventListener('wheel', function(event) { cycleUpdater(advinter, advcyc, counter_advcyc, 0)});															//deals with mouse wheel events
-window.addEventListener('keydown',function(event){
+window.addEventListener('keydown',function(event){																																									//deals with key presses
 	var keyPressed = event.keyCode || event.which;
 	cycleUpdater(advinter, advcyc, counter_advcyc, keyPressed)
 	}
 )
-
-function edge_checker(edgecan){																									// checks if an edge is in the graph
-	for (var j = 0; j < JSON_OBj["edges"].length; j++){
-		var edge = [JSON_OBj["edges"][j]["from"], JSON_OBj["edges"][j]["to"]]
-		if (edge[0] == edgecan[0] && edge[1] == edgecan[1]){
-			return true
-			}
-		}
-	}
-	function edge_index(edgecan){																									//determines an edge index
-		for (var j = 0; j < JSON_OBj["edges"].length; j++){
-			var edge = [JSON_OBj["edges"][j]["from"], JSON_OBj["edges"][j]["to"]]
-			if (edge[0] == edgecan[0] && edge[1] == edgecan[1]){
-				return j
-			}
-		}
-	}
 
 ///////////////////////////////////////////////////////////////////////////////
 																																								//If the selected cycle is valid turn then this function
@@ -374,7 +361,7 @@ function endinteraction() {																											//when called this functio
 	advinter = false
 }
 ///////////////////////////////////////////////////////////////////////////////
-function reset(){																																//This function resents everything is you want to start from scratch.
+function reset(){																																//This function resents everything if you want to start from scratch.
 	endinteraction();
 	setTimeout(function(){
 		for (var i = 0; i < edgeArray.length; i++){
@@ -383,7 +370,7 @@ function reset(){																																//This function resents everyth
 	}, 100)
 }
 ///////////////////////////////////////////////////////////////////////////////
-function sound(src, loopValue,volume) {
+function sound(src, loopValue,volume) {																					//This sound object is used to load and handle audio events
   this.sound = document.createElement("audio");
   this.sound.src = src;
 	this.sound.volume = volume
@@ -447,7 +434,7 @@ function Node(x,y,id) {																													//Node object class.
 	this.y = y;
 	this.radius = 20; //radius of the nodes
 	this.colour = 'black'
-	var bin = this.id
+
 
 	this.draw = function() {																											//This function determines how the nodes are drawn
 		c.beginPath();
@@ -461,7 +448,7 @@ function Node(x,y,id) {																													//Node object class.
 		c.fillStyle = "black";
 		c.textAlign = "center";
 		c.textBaseline = "middle";
-		c.fillText(bin,this.x,this.y);
+		c.fillText(this.id,this.x,this.y);
 	}
 
 	this.update = function(){																											//This function handels the updating of the nodes.
@@ -495,8 +482,8 @@ function Node(x,y,id) {																													//Node object class.
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-function _getQBezierValue(t, p1, p2, p3) {
-    var iT = 1 - t;
+function _getQBezierValue(t, p1, p2, p3) {																			//Funcions that find the points on the curves used to draw the edges.
+    var iT = 1 - t;																															// Used to draw arrowheads and edge label ticks
     return iT * iT * p1 + 2 * iT * t * p2 + t * t * p3;
 }
 
@@ -554,27 +541,27 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 
 				this.x_s = this.x_1 + (this.d)/(Math.sqrt(1+(this.m)**2))
 				this.y_s = this.y_1 + (this.d*this.m)/(Math.sqrt(1+(this.m)**2))
-				c.arc(this.x_s,this.y_s,this.r,0,Math.PI * 2, false);
+				c.arc(this.x_s,this.y_s,this.r,0,Math.PI * 2, false);										// Positions self loops radially out from the center
 		   	c.strokeStyle = this.edge_colour;
 				c.lineWidth = 2;
 		   	c.stroke();
 
-				this.x_text = this.x_1 + (this.k)/(Math.sqrt(1+(this.m)**2))
+				this.x_text = this.x_1 + (this.k)/(Math.sqrt(1+(this.m)**2))						//Positions self loop labels
 				this.y_text = this.y_1 + (this.k*this.m)/(Math.sqrt(1+(this.m)**2))
 				if (this.weight != 0){
 					if (this.weight < 0){
-						c.fillStyle = "red";
+						c.fillStyle = "red";																								// If the weights are negative make them red
 					}else{
 						c.fillStyle = "black";
 					}
 					c.textAlign = "left";
 					c.fillText(this.weight,this.x_text,this.y_text);
 					c.moveTo(this.x_text,this.y_text)
-					c.lineTo(this.x_1 + (65)/(Math.sqrt(1+(this.m)**2)), this.y_1 + (65*this.m)/(Math.sqrt(1+(this.m)**2)))
+					c.lineTo(this.x_1 + (65)/(Math.sqrt(1+(this.m)**2)), this.y_1 + (65*this.m)/(Math.sqrt(1+(this.m)**2))) //draw a line from the loop to the label
 					c.stroke();
 				}
 
-			}else if ((this.x_1 - (canvas.width/2)) < 0 ){
+			}else if ((this.x_1 - (canvas.width/2)) < 0 ){														//same code as above but with rotated geometry
 
 				this.x_s = this.x_1 - (this.d)/(Math.sqrt(1+(this.m)**2))
 				this.y_s = this.y_1 - (this.d*this.m)/(Math.sqrt(1+(this.m)**2))
@@ -600,7 +587,7 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 		}else{																																			//If not a self loop do this
 			c.beginPath();
 	   	c.moveTo(this.x_1,this.y_1);
-	   	c.quadraticCurveTo(this.c_x,this.c_y,this.x_2,this.y_2)
+	   	c.quadraticCurveTo(this.c_x,this.c_y,this.x_2,this.y_2)										//draw a quadratic curve
 	   	c.strokeStyle = this.edge_colour;
 			c.lineWidth = 2;
 	   	c.stroke();
@@ -609,14 +596,14 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 	   	c.strokeStyle = this.edge_colour;
 	   	c.stroke();
 	   	c.font = "25px Arial";
-			if (this.weight < 0){
+			if (this.weight < 0){																											//if weight is negative make it red
 				c.fillStyle = "red";
 			}else{
 				c.fillStyle = "black";
 			}
 
 			c.textBaseline = "middle";
-																											//Changes how the text is aligned depending on its position on the page
+																																								//Changes how the text is aligned depending on its position on the page
 			if (this.weight != 0){
 				if (this.c_x > this.x_2 && this.c_y < this.y_2 || this.c_x < this.x_2 && this.c_y < this.y_2){
 					c.textAlign = "left";
@@ -627,10 +614,10 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 		   	c.fillText(this.weight, this.c_x,this.c_y);
 				c.strokeStyle = "black"
 				c.moveTo(this.c_x,this.c_y)
-				c.lineTo(this.half.x, this.half.y)
+				c.lineTo(this.half.x, this.half.y)																			//draws a line from te curve to the label
 				c.stroke();
 			}
-			c.save();
+			c.save();																																	//saves the canvas state so local transformation can be made while drawing the arrowhead.
 			c.beginPath();
 			c.translate(this.arrowpos.x, this.arrowpos.y);
 			c.rotate(this.angle);
@@ -668,8 +655,8 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-function MessageBox (){
-	this.messages = LevelMessages()
+function MessageBox (){																													//This class handles the drawing of tutorial messages
+	this.messages = LevelMessages()																								//The text for the messages is stored in each levels data file and is loaded in when the webpage is loaded.
 	this.MessageIndex = 0
 
 	this.draw = function(){
@@ -686,7 +673,7 @@ function MessageBox (){
 	this.update = function(){
 		this.draw()
 	}
-  this.Next = function(){
+  this.Next = function(){																												// when called advance to the next message
 		if (this.MessageIndex === this.messages.length-1){
 			this.MessageIndex = this.messages.length-1
 		}else {
@@ -694,7 +681,7 @@ function MessageBox (){
 		}
 	}
 
-	this.Back = function(){
+	this.Back = function(){																												// when called go back to the previous message
 		if (this.MessageIndex === 0){
 			this.MessageIndex === 0
 		}else {
@@ -704,7 +691,7 @@ function MessageBox (){
 }
 
 
-var tutorial = istutorial()
+var tutorial = istutorial()																											// If the level is classed as a tutorial create an instance of the message boc class
 if (tutorial === true){
 	messgbox = new MessageBox()
 	function next(){
@@ -713,7 +700,7 @@ if (tutorial === true){
 	function back(){
 		messgbox.Back()
 	}
-	var NextButton = new button(canvas.width - 140,100,90, 40,"NEXT",next)
+	var NextButton = new button(canvas.width - 140,100,90, 40,"NEXT",next)				// created buttons that call the message box methods
 	var BackButton = new button((50),100,80, 40,"BACK",back)
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -740,7 +727,7 @@ for (var i = 0; i <JSON_OBj["edges"].length; i++){
 }
 ///////////////////////////////////////////////////////////////////////////////
 BackgroundMusic = new sound("Background_Music_V2.wav",true,0.2)
-																																				///Initialises game sounds
+																																								///Initialises game sounds
 var MusicPlaying = false
 function PlayMusic(){
 	if(MusicPlaying === false){
@@ -778,15 +765,14 @@ function refresh() {																														//This refresh function contro
 	resetbutton.update()
 	scramblebutton.update()
 	musicbutton.update()
-	if (advActive === true){
+	if (advActive === true){																											// If user has activated advamced moves draw this button
 		advbutton.update()
 	}
-	if (tutorial === true){
+	if (tutorial === true){																												// If it is a tutorial level draw the message box.
 		messgbox.update()
 		NextButton.update()
 		BackButton.update()
 	}
-
 }
 
 refresh();
