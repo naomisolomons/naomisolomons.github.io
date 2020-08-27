@@ -1,4 +1,9 @@
+var levelId = "TUT_3"
+var isSquambled = false
+
 function mix (){
+  isSquambled = true
+
   for(var i = 0; i < 25 ; i++){
     setTimeout(function(){
       edgeArray[5].changeweight(-0.01)

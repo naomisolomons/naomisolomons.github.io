@@ -15,6 +15,9 @@ var advcyc = {}
 var counter_advcyc = {}
 var advinter = false
 
+var moveCounter = 0
+var HighScore;
+
 //Loading of the background image
 var img = new Image();
 img.src = "Background_v3.jpg";
@@ -52,7 +55,6 @@ var mouse = { 																																	//dictionary style variable calle
 
 window.addEventListener('click', 																								//event listener waits for clicks and then stores the
 		function(event){																														//x,y position of the cursor in the variable mouse.
-
 		mouse.x = event.x
 		mouse.y = event.y
 		mouse.shift = event.shiftKey
@@ -310,8 +312,9 @@ function cycleUpdater(bool, arr1, arr2, keyPressed){
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-function endinteraction() {																											//when called this function checks the win condition and ends the interactivity.
-
+function endinteraction() {
+	if (isSquambled === true){																										//when called this function checks the win condition and ends the interactivity.
+	moveCounter++;
 	for (var i = 0; i < selectedarr.length; i++){
 		nodeArray[selectedarr[i]].changecol("black");
 	}
@@ -343,11 +346,15 @@ function endinteraction() {																											//when called this functio
 	}
 
 		if (checker(winarry) == true){
+			HighScore = localStorage.getItem("Highscore"+ levelId);
+			if (moveCounter < HighScore || HighScore === null){
+				localStorage.setItem("Highscore"+ levelId, moveCounter);
+			}
 			BackgroundMusic.stop()
 			MusicPlaying = false
 			VictoryMusic.play()
 			setTimeout(function(){
-				alert("Congrats on Completing the Level. Refresh the page to play again or return to the home page for another Level.")
+				alert("Congrats on Completing the Level in "+ moveCounter +" moves. Refresh the page to play again or return to the home page for another Level.")
 			}, 200);
 		}
 	inter = false;																																//reset all appropriate variables
@@ -359,6 +366,9 @@ function endinteraction() {																											//when called this functio
 	advcyc = {}
 	counter_advcyc = {}
 	advinter = false
+} else{
+	alert("Press Squamble to initialise the level.")
+}
 }
 ///////////////////////////////////////////////////////////////////////////////
 function reset(){																																//This function resents everything if you want to start from scratch.
@@ -368,6 +378,28 @@ function reset(){																																//This function resents everyth
 			edgeArray[i].resetweight()
 		}
 	}, 100)
+}
+///////////////////////////////////////////////////////////////////////////////
+function HighScoreDisplay(x,y){
+	this.x = x;
+	this.y = y;
+  this.scr = localStorage.getItem("Highscore"+ levelId);
+	this.draw = function(){
+		c.fillStyle = "black";
+		c.textAlign = "start";
+		c.textBaseline = "alphabetic";
+		c.fillText("HighScore = ",this.x, this.y);
+		c.stroke();
+		if (this.scr !== null){
+			c.fillText(this.scr,this.x + 175, this.y);
+			c.stroke();
+		}
+	}
+
+	this.update = function(){
+		this.scr = localStorage.getItem("Highscore"+ levelId);
+		this.draw();
+	}
 }
 ///////////////////////////////////////////////////////////////////////////////
 function sound(src, loopValue,volume) {																					//This sound object is used to load and handle audio events
@@ -748,6 +780,7 @@ var resetbutton = new button((canvas.width)/8, (0.75*(canvas.height)+90), 125, 4
 var scramblebutton = new button(6*(canvas.width)/8, (0.75*(canvas.height)+45), 180, 40, "SQUAMBLE", mix)
 var musicbutton = new button(6*(canvas.width)/8, (0.75*(canvas.height)), 125, 40, "MUSIC", PlayMusic)
 var advbutton = new button (6*(canvas.width)/8, (0.75*(canvas.height)+90), 150, 40, "Advanced", advchecher)
+var newHighScoreDisplay = new HighScoreDisplay((canvas.width)/8, 0.75*(canvas.height) - 30)
 ///////////////////////////////////////////////////////////////////////////////
 function refresh() {																														//This refresh function controls the animation loop.
 	requestAnimationFrame(refresh);
@@ -765,6 +798,7 @@ function refresh() {																														//This refresh function contro
 	resetbutton.update()
 	scramblebutton.update()
 	musicbutton.update()
+	newHighScoreDisplay.update()
 	if (advActive === true){																											// If user has activated advamced moves draw this button
 		advbutton.update()
 	}
