@@ -183,12 +183,14 @@ function Cyclecheck(arr) {																											// This means that it check
 				var counter_edgecan = [arr[i+1],arr[i]];
 			}
 		}
+		edgecan_check = edge_checker(edgecan)
+		counter_edgecan_check = edge_checker(counter_edgecan)
 
-		included[i] = edge_checker(edgecan).bool;																		// sum over the edges and checks that the proposed edges are in the edge set
-		cycle_edges[edgecan] = edge_checker(edgecan).index;
+		included[i] = edgecan_check.bool;																						// sum over the edges and checks that the proposed edges are in the edge set
+		cycle_edges[edgecan] = edgecan_check.index;
 
-		counter_included[i] = edge_checker(counter_edgecan).bool;
-		counter_cycle_edges[edgecan] = edge_checker(counter_edgecan).index;
+		counter_included[i] = counter_edgecan_check.bool;
+		counter_cycle_edges[edgecan] = counter_edgecan_check.index;
 	}
 	 																																							//returns true if every element in an array is true.
 	if (checker(included) == true && checker(counter_included) == true){					// if cycle and counter cycle are in the graph then return true.
@@ -217,13 +219,20 @@ function advchecher(){																													//this function handles the a
 		edge_ipnj = [(selectedarr[0]+n)%(N),selectedarr[1]]
 		edge_ijpm = [selectedarr[0], (selectedarr[1]+m)%(N)]
 
-		truth = [false,false,false,false]
-		truth = [edge_checker(edge_ij).bool,edge_checker(edge_ipnjpm).bool,edge_checker(edge_ipnj).bool,edge_checker(edge_ijpm).bool] //check that the edges exist
+		edge_ij_check = edge_checker(edge_ij) 																																	//define the edges in the two cycle
+		edge_ipnjpm_check = edge_checker(edge_ipnjpm)
 
-		advcyc[edge_ij] = edge_checker(edge_ij).index																				//determine edge index
-		advcyc[edge_ipnjpm] = edge_checker(edge_ipnjpm).index
-		counter_advcyc[edge_ipnj] = edge_checker(edge_ipnj).index
-		counter_advcyc[edge_ijpm] = edge_checker(edge_ijpm).index
+		edge_ipnj_check = edge_checker(edge_ipnj)
+		edge_ijpm_check = edge_checker(edge_ijpm)
+
+
+		truth = [false,false,false,false]
+		truth = [edge_ij_check.bool,edge_ipnjpm_check.bool,edge_ipnj_check.bool,edge_ijpm_check.bool] //check that the edges exist
+
+		advcyc[edge_ij] = edge_ij_check.index																				//determine edge index
+		advcyc[edge_ipnjpm] = edge_ipnjpm_check.index
+		counter_advcyc[edge_ipnj] = edge_ipnj_check.index
+		counter_advcyc[edge_ijpm] = edge_ijpm_check.index
 
 																																								//if all the edges are in the graph continue
 		if (checker(truth) === true){
@@ -373,6 +382,7 @@ function endinteraction() {
 ///////////////////////////////////////////////////////////////////////////////
 function reset(){																																//This function resents everything if you want to start from scratch.
 	endinteraction();
+	isSquambled = false
 	setTimeout(function(){
 		for (var i = 0; i < edgeArray.length; i++){
 			edgeArray[i].resetweight()
