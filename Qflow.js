@@ -540,6 +540,13 @@ function getQuadraticAngle(t, sx, sy, cp1x, cp1y, ex, ey) {
   var dy = 2*(1-t)*(cp1y-sy) + 2*t*(ey-cp1y);
   return -Math.atan2(dx, dy) + 0.5*Math.PI;
 }
+
+function RadialPath(scl, grad){
+	return coords = {
+		x: (scl)/(Math.sqrt(1+(grad)**2)),
+		y: (scl*grad)/(Math.sqrt(1+(grad)**2))
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////
 function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object Class
 	this.from = from;																															//Defines a bunch of edge properties
@@ -581,15 +588,15 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 			c.beginPath();
 			if ((this.x_1 - (canvas.width/2)) > 0 ){																	//This section makes sure the self loops are always aligned correctly
 
-				this.x_s = this.x_1 + (this.d)/(Math.sqrt(1+(this.m)**2))
-				this.y_s = this.y_1 + (this.d*this.m)/(Math.sqrt(1+(this.m)**2))
+				this.x_s = this.x_1 + RadialPath(this.d,this.m).x
+				this.y_s = this.y_1 + RadialPath(this.d,this.m).y
 				c.arc(this.x_s,this.y_s,this.r,0,Math.PI * 2, false);										// Positions self loops radially out from the center
 		   	c.strokeStyle = this.edge_colour;
 				c.lineWidth = 2;
 		   	c.stroke();
 
-				this.x_text = this.x_1 + (this.k)/(Math.sqrt(1+(this.m)**2))						//Positions self loop labels
-				this.y_text = this.y_1 + (this.k*this.m)/(Math.sqrt(1+(this.m)**2))
+				this.x_text = this.x_1 + RadialPath(this.k,this.m).x						//Positions self loop labels
+				this.y_text = this.y_1 + RadialPath(this.k,this.m).y
 				if (this.weight != 0){
 					if (this.weight < 0){
 						c.fillStyle = "red";																								// If the weights are negative make them red
@@ -599,20 +606,20 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 					c.textAlign = "left";
 					c.fillText(this.weight,this.x_text,this.y_text);
 					c.moveTo(this.x_text,this.y_text)
-					c.lineTo(this.x_1 + (65)/(Math.sqrt(1+(this.m)**2)), this.y_1 + (65*this.m)/(Math.sqrt(1+(this.m)**2))) //draw a line from the loop to the label
+					c.lineTo(this.x_1 + RadialPath(65,this.m).x, this.y_1 + RadialPath(65,this.m).y) //draw a line from the loop to the label
 					c.stroke();
 				}
 
 			}else if ((this.x_1 - (canvas.width/2)) < 0 ){														//same code as above but with rotated geometry
 
-				this.x_s = this.x_1 - (this.d)/(Math.sqrt(1+(this.m)**2))
-				this.y_s = this.y_1 - (this.d*this.m)/(Math.sqrt(1+(this.m)**2))
+				this.x_s = this.x_1 - RadialPath(this.d,this.m).x
+				this.y_s = this.y_1 - RadialPath(this.d,this.m).y
 				c.strokeStyle = this.edge_colour;
 				c.arc(this.x_s,this.y_s,this.r,0,Math.PI * 2, false);
 				c.lineWidth = 2;
 		   	c.stroke();
-				this.x_text = this.x_1 - (this.k)/(Math.sqrt(1+(this.m)**2))
-				this.y_text = this.y_1 - (this.k*this.m)/(Math.sqrt(1+(this.m)**2))
+				this.x_text = this.x_1 - RadialPath(this.k,this.m).x
+				this.y_text = this.y_1 - RadialPath(this.k,this.m).y
 				if (this.weight != 0){
 					if (this.weight < 0){
 						c.fillStyle = "red";
@@ -622,7 +629,7 @@ function Edge(x_1, y_1, x_2, y_2,weight,from,to){																// Edge object 
 					c.textAlign = "right";
 					c.fillText(this.weight,this.x_text,this.y_text);
 					c.moveTo(this.x_text,this.y_text)
-					c.lineTo(this.x_1 - (65)/(Math.sqrt(1+(this.m)**2)), this.y_1 - (65*this.m)/(Math.sqrt(1+(this.m)**2)))
+					c.lineTo(this.x_1 - RadialPath(65,this.m).x, this.y_1 - RadialPath(65,this.m).y)
 					c.stroke();
 				}
 			}
