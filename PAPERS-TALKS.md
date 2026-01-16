@@ -1,5 +1,4 @@
 ---
-layout: page
 title: "Papers/posters/talks"
 permalink: /papers-talks
 ---
