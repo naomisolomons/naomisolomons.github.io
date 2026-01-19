@@ -2,4 +2,6 @@
 layout: default
 ---
 
-Hello! My name is Naomi and I'm a postdoc in the [LIP6 QI group](https://qi.lip6.fr/) at the Sorbonne University in Paris. You can look at my [Google Scholar](https://scholar.google.com/citations?user=1DMjizQAAAAJ&hl=en&oi=ao).
+My interests are, broadly, how quantum information differs from the classical world and how this can be harnessed for a useful advantage, particularly in computation. During my PhD, I studied Gaussian boson sampling, and during my postdoc I have been working on distributed quantum sensing. 
+
+You can look at my [Google Scholar](https://scholar.google.com/citations?user=1DMjizQAAAAJ&hl=en&oi=ao).
