@@ -2,7 +2,7 @@
 layout: default
 ---
 
-My interests are, broadly, how quantum information differs from the classical world and how this can be harnessed for a useful advantage, particularly in computation. During my PhD, I studied Gaussian boson sampling, and during my postdoc I have been working on distributed quantum sensing. I am also currently interested in contextuality.
+My interests are, broadly, how quantum information differs from the classical world and how this can be harnessed for a useful advantage. I have worked on different topics in quantum information, including quantum communication and metrology, quantum advantage and complexity theory, quantum optics, and measurement based quantum computing. During my PhD, I studied Gaussian boson sampling, and during my postdoc I have been working on distributed quantum sensing. I am also currently interested in contextuality.
 
 I grew up in Essex, in the UK, and did my undergrad at Durham University, then joined the Quantum Engineering CDT at the University of Bristol (now the [QIST CDT](https://www.qist-cdt.info/)). During my PhD I did an internship with [Riverlane](https://www.riverlane.com/) and worked part-time for [Duality Quantum Photonics](https://www.dualityqp.com/). Since May 2024 I have been in Paris in the [LIP6 QI group](https://naomisolomons.github.io/). You can download my CV [here](./Naomi_Solomons_CV.pdf).
 
